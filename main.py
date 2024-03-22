@@ -1,6 +1,6 @@
 import subprocess
 import datetime
-from mycalendar import process_glucose, create_calendar
+from mycalendar import process_glucose, create_calendar, add_event,write_calendar
 import sys
 import json
 from utilities import createRestrictions, createGames, createDNF
@@ -31,13 +31,10 @@ if __name__ == '__main__':
     #print(all_games)
         
     restrictions = createRestrictions(tournament_days,games_per_day,number_of_players)
-    variables = process_glucose()
-    create_calendar(variables,tournament_name,start_date,end_date,participants,start_time)
-
     createDNF(restrictions,all_games)
-    # Run Glucose
-    #glucose_command = ["./bin/glucose","-model","-verb=0","output.cnf","salida_cnf.txt"]
-    #subprocess.call(glucose_command)
+    variables = process_glucose()
+    calendar = create_calendar(tournament_name,start_date,end_date)
+
     players_map = {}
     days_map = {}
     hours_map = {}
@@ -49,14 +46,24 @@ if __name__ == '__main__':
         begin = datetime.datetime.combine(start_date + datetime.timedelta(days=i), start_time)
         begin += datetime.timedelta(hours=i*2)
         hours_map[i] = begin.time()
-    print(players_map)
-    print(days_map)
-    print(hours_map)
-    solution_file = open("salida_cnf.txt", "r")
+
+
+    solution_file = open("salida_glucose.txt", "r")
     solution = solution_file.readline().strip()
     solution_file.close()
     for sol in solution.split():
         if int(sol) > 0:
-            print("UWUWUWUW")
-            print(sol)
-            print(all_games[int(sol)])
+            tuple = all_games[int(sol)]
+            #print("---------")
+            #print(tuple)
+            #print(f"Local {players_map[tuple[0]]} vs visitante: {players_map[tuple[1]]}")
+            #print(f"El día {days_map[tuple[2]]} a las {hours_map[tuple[3]]}")
+            event = add_event(players_map[tuple[0]],players_map[tuple[1]],days_map[tuple[2]],hours_map[tuple[3]])
+            calendar.add_component(event)
+
+    write_calendar(calendar)
+            
+
+
+
+    #create_calendar(variables,tournament_name,start_date,end_date,participants,start_time)

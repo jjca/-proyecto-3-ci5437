@@ -1,15 +1,15 @@
 import subprocess
 from icalendar import Calendar, Event
-from datetime import datetime
+from datetime import datetime, timedelta
 from utilities import getGame
 
 def process_glucose():
     #Recolect variables from CNF file
-    glucose_command = ["./bin/glucose","-model","-verb=0","prueba.cnf","salida_cnf.txt"]
+    glucose_command = ["./bin/glucose","-model","-verb=0","output.cnf","salida_glucose.txt"]
     subprocess.call(glucose_command)
 
     #Send and recolect data to/for glucose
-    solution_file = open("salida_cnf.txt", "r")
+    solution_file = open("salida_glucose.txt", "r")
     variables = []
 
     for line in solution_file.readlines():
@@ -23,30 +23,29 @@ def process_glucose():
     return variables
 
 #Translate data to icalendar format
-def var_to_event(var,participants,start_date,start_time):
-    game = getGame(var)
-    local = participants[game[0]]
-    guest = participants[game[1]]
-    day = start_date + datetime.timedelta(days= game[2])
-    hour = start_time + datetime.timedelta(hours= game[3])
-
+def add_event(local,guest,start_date,start_time):
+    date = datetime.combine(start_date,start_time)
+    date_plus_hour = date + timedelta(hours=2)
+    #print(date_plus_hour)
+    #print(date)
     event = Event()
     event.add('summary',"{}(Local) vs {}(Visitante)".format(local,guest))
-    event.add('dtstart',day)
-    event.add('dtend',hour)
-
+    event.add('dtstart',date)
+    event.add('dtend',date_plus_hour)
+    #print(event)
     return event
 
-def create_calendar(variables,tournament_name,start_date,end_date,participants,start_time):
+
+def create_calendar(tournament_name,start_date,end_date):
     
     calendar = Calendar()
     calendar.add('summary', tournament_name)
     calendar.add('dtstart',start_date)
     calendar.add('dtend', end_date)
 
-    for var in variables:
-        calendar.add_component(var_to_event(var,participants,start_date,start_time))
+    return calendar
 
-    calendar_file = open("calendario.ics", "w")
+def write_calendar(calendar):
+    calendar_file = open("calendario.ics", "wb")
     calendar_file.write(calendar.to_ical())
     calendar_file.close()
