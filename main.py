@@ -32,7 +32,7 @@ if __name__ == '__main__':
         
     restrictions = createRestrictions(tournament_days,games_per_day,number_of_players)
     variables = process_glucose()
-    create_calendar(variables,tournament_name,start_date,end_date)
+    create_calendar(variables,tournament_name,start_date,end_date,participants,start_time)
 
     createDNF(restrictions,all_games)
     # Run Glucose

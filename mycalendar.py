@@ -37,15 +37,15 @@ def var_to_event(var,participants,start_date,start_time):
 
     return event
 
-def create_calendar(variables,tournament_name, start_time,end_time):
+def create_calendar(variables,tournament_name,start_date,end_date,participants,start_time):
     
     calendar = Calendar()
     calendar.add('summary', tournament_name)
-    calendar.add('dtstart',start_time)
-    calendar.add('dtend', end_time)
+    calendar.add('dtstart',start_date)
+    calendar.add('dtend', end_date)
 
     for var in variables:
-        calendar.add_component(var_to_event(var))
+        calendar.add_component(var_to_event(var,participants,start_date,start_time))
 
     calendar_file = open("calendario.ics", "w")
     calendar_file.write(calendar.to_ical())
