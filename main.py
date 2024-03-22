@@ -2,6 +2,7 @@
     n_participants = len(participants)
 """
 import datetime
+from mycalendar import process_glucose, create_calendar
 import sys
 import json
 from utilities import createRestrictions, createGames
@@ -31,4 +32,7 @@ if __name__ == '__main__':
     all_games = createGames(number_of_players,tournament_days,games_per_day)
     #print(all_games)
     restrictions = createRestrictions(tournament_days,games_per_day,number_of_players,all_games)
+
+    variables = process_glucose()
+    create_calendar(variables,tournament_name,start_date,end_date)
     

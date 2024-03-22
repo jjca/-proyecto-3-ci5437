@@ -13,6 +13,12 @@ def getIDDict(game):
             return key
  
     return "key doesn't exist"
+
+def getGame(key):
+    if key in games_mapping:
+        return games_mapping[key]
+
+    return "key doesn't exist"    
  
 """
 This creates all possible games for the data provided
