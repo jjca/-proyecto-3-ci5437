@@ -39,6 +39,16 @@ def createGames(number_players,number_days,number_hours):
 
 def createRestrictions(number_days,number_hours,number_players):
     restrictions = []
+    for i in range(number_players):
+        for j in range(number_players):
+            if i != j:
+                rest_temp = []
+                for d in range(number_days):
+                    for b in range((number_hours//2)+1):
+                        rest_temp.append(getIDDict((i, j, d, b)))
+                rest_temp = ' '.join(map(str,rest_temp))
+                restrictions.append(rest_temp)
+
     # Two games cannot happen at the same time
     for d in range(0,number_days):
         for h in range(0,(number_hours//2)+1):
