@@ -37,7 +37,7 @@ def createGames(number_players,number_days,number_hours):
     #print(games_mapping)
     return games
 
-def createRestrictions(number_days,number_hours,number_players,games):
+def createRestrictions(number_days,number_hours,number_players):
     restrictions = []
     # Two games cannot happen at the same time
     for d in range(0,number_days):
@@ -48,7 +48,7 @@ def createRestrictions(number_days,number_hours,number_players,games):
                         for k in range(0,number_players):
                             for l in range(0,number_players):
                                 if (k != i or l != j) and k != l:
-                                    restrictions.append(f"-{getIDDict((i,j,d,h))} -{getIDDict((k,l,d,h))} 0")
+                                    restrictions.append(f"-{getIDDict((i,j,d,h))} -{getIDDict((k,l,d,h))}")
 
     # All teams must play two times each and only two times
     for i in range(number_players):
@@ -70,8 +70,8 @@ def createRestrictions(number_days,number_hours,number_players,games):
                         for j2 in range(number_players):
                             if i != j2 and j2 != j:
                                 for h2 in range(number_hours):
-                                    restrictions.append(f"-{getIDDict((i,j,d,h))} -{getIDDict((i,j2,d,h2))} 0")
-                                    restrictions.append(f"-{getIDDict((i,j,d,h))} -{getIDDict((j2,j,d,h2))} 0")
+                                    restrictions.append(f"-{getIDDict((i,j,d,h))} -{getIDDict((i,j2,d,h2))}")
+                                    restrictions.append(f"-{getIDDict((i,j,d,h))} -{getIDDict((j2,j,d,h2))}")
 
     # A team can only play almost once per day
     for d in range(number_days):
@@ -88,4 +88,14 @@ def createRestrictions(number_days,number_hours,number_players,games):
                                     
                                     restrictions.append(f"-{getIDDict((i,j,d,h))} -{getIDDict((k,i,d,l))}")
 
-    print(restrictions)
+    return restrictions
+
+
+def createDNF(restrictions,games):
+    file = open("output.cnf","w")
+    file.write(f"p cnf {len(games)} {len(restrictions)} \n")
+
+    for rest in restrictions:
+        file.write(f"{rest} 0\n")
+    
+    file.close()

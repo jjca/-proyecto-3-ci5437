@@ -36,9 +36,10 @@ Así, una variable se define como $x(e_i,e_j,d,h)$, donde $e_i,e_j \in E \land e
 ### Restricciones
 
 - Todos los participantes deben jugar dos veces con cada uno de los otros participantes, una como "visitantes" y la otra como "locales". Esto significa que, si hay 10 equipos, cada equipo jugará 18 veces.
+$(\forall e_i,e_j \in E | e_i \neq e_j : (\exists d \in D, h \in H | x(e_i,e_j,d,h)))$ 
 
-- Dos juegos no pueden ocurrir al mismo tiempo. $(\forall x_1(e_i1,e_j1,d_1,h_1),x_2(e_i2,e_j2,d_2,h_2) | : h_1 != h_2)$
-- Un participante puede jugar a lo sumo una vez por día. $(\forall x)
+- Dos juegos no pueden ocurrir al mismo tiempo. $(\forall x_1(e_i1,e_j1,d_1,h_1), x_2(e_i2,e_j2,d_2,h_2) | : h_1 != h_2 \land d_1 = d_2)$
+- Un participante puede jugar a lo sumo una vez por día. $(\forall e \in E| \sum_{i=1,j=1}^{n,m} x(e_i,e_k,d_j,h) <= 1)$
 * Un participante no puede jugar de "visitante" en dos días consecutivos, ni de "local" dos días seguidos.
 * Todos los juegos deben empezar en horas "en punto" (por ejemplo, las 13:00:00 es una hora válida pero las 13:30:00 no).
 * Todos los juegos deben ocurrir entre una fecha inicial y una fecha final especificadas. Pueden ocurrir juegos en dichas fechas.
