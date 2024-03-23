@@ -100,9 +100,11 @@ El tiempo de ejecución es posible que pueda ser acortado si se procesa de una f
 
 A medida que se aumenta la cantidad de equipos y se tiene más tiempo, el número de casos posible aumenta muchísimo. Lo ideal es que se tenga un escenario ajustado, para obtener buenos resultados. Por el contrario, mientras menos días se tenga que calcular y menos equipos se tenga, más rápido será la creación del CNF.
 
-El número total de casos posibles viene dado por: cantidad_de_equipos $\times$ cantidad_de_equipos-1 $\times$ cantidad_días $\times$ cantidad_horas_disponibles
+El número aproximado de casos posibles viene dado por: cantidad_de_equipos $\times$ cantidad_de_equipos-1 $\times$ cantidad_días $\times$ cantidad_horas_disponibles
 
-Luego, cada ciclo debe ejecutarse al menos $\Omega$(cantidad_de_equipos $\times$ cantidad_de_equipos-1 $\times$ cantidad_días $\times$ cantidad_horas_disponibles)
+Luego, cada ciclo debe ejecutarse al menos en tiempo $\Omega$(cantidad_de_equipos $\times$ cantidad_de_equipos-1 $\times$ cantidad_días $\times$ cantidad_horas_disponibles).
+
+El uso de memoria viene dado por la cantidad de cláusulas, y el archivo de `output.cnf`.
 
 # Referencias
 
