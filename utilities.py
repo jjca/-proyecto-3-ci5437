@@ -27,11 +27,11 @@ def createGames(number_players,number_days,number_hours):
     games = []
     for i in range(0,number_players):
         for j in range(0,number_players):
-            if i != j:
                 for d in range(0,number_days):
                     for h in range(0,(number_hours)):
+                        if i != j:
                         #print(f"{i} {j} {d} {h}")
-                        games.append((i,j,d,h))
+                            games.append((i,j,d,h))
     for i in range(len(games)):
         games_mapping[i+1] = games[i]
     #print(games_mapping)
