@@ -36,16 +36,73 @@ Así, una variable se define como $x(e_i,e_j,d,h)$, donde $e_i,e_j \in E \land e
 ### Restricciones
 
 - Todos los participantes deben jugar dos veces con cada uno de los otros participantes, una como "visitantes" y la otra como "locales". Esto significa que, si hay 10 equipos, cada equipo jugará 18 veces.
-$(\forall e_i,e_j \in E | e_i \neq e_j : (\exists d \in D, h \in H | x(e_i,e_j,d,h)))$ 
+- Dos juegos no pueden ocurrir al mismo tiempo.
+- Un participante puede jugar a lo sumo una vez por día.
+- Un participante no puede jugar de "visitante" en dos días consecutivos, ni de "local" dos días seguidos.
+- Todos los juegos deben empezar en horas "en punto" (por ejemplo, las 13:00:00 es una hora válida pero las 13:30:00 no).
+- Todos los juegos deben ocurrir entre una fecha inicial y una fecha final especificadas. Pueden ocurrir juegos en dichas fechas.
+- Todos los juegos deben ocurrir entre un rango de horas especificado, el cuál será fijo para todos los días del torneo.
+- A efectos prácticos, todos los juegos tienen una duración de dos horas.
 
-- Dos juegos no pueden ocurrir al mismo tiempo. $(\forall x_1(e_i1,e_j1,d_1,h_1), x_2(e_i2,e_j2,d_2,h_2) | : h_1 != h_2 \land d_1 = d_2)$
-- Un participante puede jugar a lo sumo una vez por día. $(\forall e \in E| \sum_{i=1,j=1}^{n,m} x(e_i,e_k,d_j,h) <= 1)$
-* Un participante no puede jugar de "visitante" en dos días consecutivos, ni de "local" dos días seguidos.
-* Todos los juegos deben empezar en horas "en punto" (por ejemplo, las 13:00:00 es una hora válida pero las 13:30:00 no).
-* Todos los juegos deben ocurrir entre una fecha inicial y una fecha final especificadas. Pueden ocurrir juegos en dichas fechas.
-* Todos los juegos deben ocurrir entre un rango de horas especificado, el cuál será fijo para todos los días del torneo.
-* A efectos prácticos, todos los juegos tienen una duración de dos horas.
+Las restricciones mapeadas fueron las 1, 2, 3, 4. Las otras restricciones se encuentran implícitas en la definición del problema y por cómo se hizo el código. La mayoría de las restricciones contiene dos literales negativos, de forma que sólo uno de ellos sea verdadero.
+# Ejecución
 
+Para ejecutar el programa, se debe usar:
+
+```bash
+python3 main.py nombre_JSON.json
+```
+
+## Casos de prueba
+
+Se crearon varios casos de prueba con 3 a 10 equipos, e intervalos de tiempo entre 1 semana a 1 mes. Los casos de prueba se almacenaron en el directorio `jsons` siguiendo además el formato indicado en el enunciado del problema.
+
+Los casos de prueba se ejecutaron en equipos con el siguiente hardware:
+
+- Windows Subsystem for Linux con Debian 12, Intel Core i7-9750H @ 2.60GHz x 6 core, 3GB de RAM
+- Windows Subsystem for Linux con Ubuntu 22.04, Intel Core i5-11400F @ 2.60GHz, 16GB de RAM
+
+### Ejecución de los casos
+
+La ejecución de cada caso implicó:
+
+- Crear los juegos posibles
+- Crear el CNF correspondiente `output.cnf`
+- Ejecutar el solver SAT Glucose sobre `output.cnf` y registrar su salida en `salida_glucose.txt`.
+- Crear el archivo `calendario.ics`.
+
+Se ejecutó cada caso una sola vez y se registró el tiempo de ejecución del mismo, registrándose en la siguiente tabla:
+
+#### Fáciles
+
+| |F1|F2|F3|F4|
+|:---:|:---:|:---:|:---:|:---:|
+Nº de variables|384|180|1320|4200|4200|
+Nº de cláusulas|25740|8256|187100|1006770|1006770|
+Tiempo de ejecución|0.036s|0.097s|7.34s|1min 57s|2 min|
+
+Para los casos fáciles, F3 y F4, el archivo de las cláusulas CNF `output.cnf` llegó a pesar 13 MB.
+
+#### Intermedio
+| |I1|I2|I3|
+|:---:|:---:|:---:|:---:|
+Nº de variables|10304|9504|10350|
+Nº de cláusulas|3985912|3290184|3576240|
+Tiempo de ejecución|19 min 30s|15 min|14 min|
+
+Para los casos I1, I2 e I3, el tamaño del archivo `output.cnf` fue de 53MB, 44MB y 48MB, respectivamente.
+
+#### Conclusión
+
+Debido a la gran cantidad de ciclos anidados que se presentan para generar el archivo CNF, el tiempo de ejecución del programa se ve acotado por la creación de las cláusulas del CNF y luego crear el archivo. Una vez generado, Glucose realiza el cálculo rápidamente y el mapeo inverso es rápido también, por lo que la creación del ics termina segundos después.
+
+El tiempo de ejecución es posible que pueda ser acortado si se procesa de una forma diferente el cálculo del archivo CNF. 
+
+A medida que se aumenta la cantidad de equipos y se tiene más tiempo, el número de casos posible aumenta muchísimo. Lo ideal es que se tenga un escenario ajustado, para obtener buenos resultados. Por el contrario, mientras menos días se tenga que calcular y menos equipos se tenga, más rápido será la creación del CNF.
+
+El número total de casos posibles viene dado por: cantidad_de_equipos $\times$ cantidad_de_equipos-1 $\times$ cantidad_días $\times$ cantidad_horas_disponibles
+
+Luego, cada ciclo debe ejecutarse al menos $\Omega$(cantidad_de_equipos $\times$ cantidad_de_equipos-1 $\times$ cantidad_días $\times$ cantidad_horas_disponibles)
 
 # Referencias
 
