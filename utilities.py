@@ -27,10 +27,11 @@ def createGames(number_players,number_days,number_hours):
     games = []
     for i in range(0,number_players):
         for j in range(0,number_players):
+            if i != j:
                 for d in range(0,number_days):
                     for h in range(0,(number_hours)):
                         if i != j:
-                        #print(f"{i} {j} {d} {h}")
+                            #print(f"{i} {j} {d} {h}")
                             games.append((i,j,d,h))
     for i in range(len(games)):
         games_mapping[i+1] = games[i]
@@ -44,14 +45,14 @@ def createRestrictions(number_days,number_hours,number_players):
             if i != j:
                 rest_temp = []
                 for d in range(number_days):
-                    for b in range((number_hours//2)+1):
+                    for b in range(number_hours):
                         rest_temp.append(getIDDict((i, j, d, b)))
                 rest_temp = ' '.join(map(str,rest_temp))
                 restrictions.append(rest_temp)
 
     # Two games cannot happen at the same time
     for d in range(0,number_days):
-        for h in range(0,(number_hours//2)+1):
+        for h in range(0,number_hours):
             for i in range(0,number_players):
                 for j in range(0,number_players):
                     if i != j:
@@ -65,7 +66,7 @@ def createRestrictions(number_days,number_hours,number_players):
         for j in range(number_players):
             if i != j:
                 for d in range(number_days):
-                    for h in range((number_hours//2)+1):
+                    for h in range(number_hours):
                         a = f"-{getIDDict((i,j,d,h))}"
                         for d2 in range(d+1,number_days):
                             for h2 in range(number_hours):
@@ -75,23 +76,26 @@ def createRestrictions(number_days,number_hours,number_players):
     for i in range(number_players):
         for j in range(number_players):
             if i != j:
-                for d in range(number_days):
+                for d in range(number_days-1):
                     for h in range((number_hours)):
                         for j2 in range(number_players):
                             if i != j2 and j2 != j:
                                 for h2 in range(number_hours):
-                                    restrictions.append(f"-{getIDDict((i,j,d,h))} -{getIDDict((i,j2,d,h2))}")
-                                    restrictions.append(f"-{getIDDict((i,j,d,h))} -{getIDDict((j2,j,d,h2))}")
+                                    restrictions.append(f"-{getIDDict((i,j,d,h))} -{getIDDict((i,j2,d+1,h2))}")
+                        for i2 in range(number_players):
+                            if i2 != i and i2 != j:        
+                                for h2 in range(number_hours):
+                                    restrictions.append(f"-{getIDDict((i,j,d,h))} -{getIDDict((i2,j,d+1,h2))}")
 
     # A team can only play almost once per day
     for d in range(number_days):
         for i in range(number_players):
             for j in range(number_players):
                 if i != j:
-                    for h in range((number_hours // 2) + 1):
+                    for h in range(number_hours):
                         for k in range(number_players):
                             if k != i:
-                                for l in range((number_hours // 2) + 1):
+                                for l in range(number_hours):
                                     if k != j:
                                         restrictions.append(f"-{getIDDict((i,j,d,h))} -{getIDDict((i,k,d,l))}")
                                         restrictions.append(f"-{getIDDict((i,j,d,h))} -{getIDDict((k,j,d,l))}")

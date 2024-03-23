@@ -32,7 +32,7 @@ if __name__ == '__main__':
 
     tournament_days = (end_date - start_date).days + 1
     tournament_hours = (datetime.datetime.combine(datetime.date.today(),end_time) - datetime.datetime.combine(datetime.date.today(),start_time)).seconds//3600
-    games_per_day = tournament_hours // 2 
+    games_per_day = (tournament_hours // 2)+1
     number_of_players = len(participants) 
     all_games = createGames(number_of_players,tournament_days,games_per_day)
     #print(all_games)
