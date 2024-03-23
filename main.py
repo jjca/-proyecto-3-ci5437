@@ -1,4 +1,4 @@
-import subprocess
+import subprocess, threading, os
 import datetime
 from mycalendar import process_glucose, create_calendar, add_event,write_calendar
 import sys
@@ -65,7 +65,7 @@ if __name__ == '__main__':
             print("fail")
             break
         if int(sol) > 0:
-            print(int(sol))
+            #print(int(sol))
             tuple = games_mapping.get(int(sol))
             #print("---------")
             #print(tuple)
